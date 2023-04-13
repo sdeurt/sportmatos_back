@@ -1,0 +1,62 @@
+Boutique vente en ligne Matériel sport
+
+
+L'appli propose d'afficher tous les produits classés ou pas
+ par catégories accessibles via  api, d'en sélectionner un ou plusieurs
+ pour constituer un panier avec la possibilité de passer commande à tout moment
+ à condition d'être authentifié, et en bonus la possibilité de régler en ligne. 
+
+
+Différents Rôles :
+•	L’utilisateur non authentifié peut naviguer sur le site 
+    et consulter les infos des produits proposés :
+•	L’utilisateur connecté donc authentifié  peut réaliser un panier 
+    constitué d'un ou plusieurs produits puis passer commande
+•	L’administrateur  peut changer les photos des produits, modifier les infos d’un produit
+
+******************************************************************************
+MVP
+Version1 :
+•	Afficher par défaut la liste des catégories et produits contenue en back
+•	Dans la barre de navigation avec nom du site... au clic sur :
+
+    - home, pour la liste des produits sélectionnable
+    - disponible, pour la liste des produits disponibles
+    - mon panier, pour l’ accès au contenu du panier en cours
+    - login/out, renvoient vers un formulaire d’authentification
+    =>JWT pour la phase d’authentification
+    -contact
+
+•	Afficher la liste des produits correspondant à une catégorie
+    par le simple clic sur celle ci, elle apparaîtra en bleu par exemple.
+•	Afficher le pointer vers la catégorie ou produit 
+    survolée avec la souris (pour clic).
+•	Les catégories non sélectionnés doivent apparaître en grisées.
+•	Afficher sous chaque produit des icônes signifiant s'ils sont sélectionnés, 
+    en promotion ou disponible.
+•	lorsqu'on clic sur une photo d’un produit, afficher les informations détaillées
+     sur le produit correspondant : nom, description, prix, disponibilité.
+
+L’utilisateur authentifié peut se créer un panier d’un ou plusieurs produits, 
+peut revenir sur la liste des produits pour ajouter dans le panier en cours. 
+=> Prévoir bouton « modifier/supprimer un ou plusieurs produits dans le panier.
+
+L’administrateur propose pour les clients ayant un compte un formulaire d’authentification. 
+Il accède  aux produits, les modifie et les met à jour. => photo stockée dans le back 
+:avec limitation de taille 	Prévoir l’ajout et retrait d’un produit déjà sélectionné
+**********************************************************************************
+
+Version 2 :
+
+-promotions et nouveautés  dans la liste des produits 
+-afficher le récapitulatif de commande
+-si commande validée : mettre à jour le back et l’affichage au front
+- gestion des photos
+Version 3 :
+- Passer la commande pour l’utilisateur et phase de paiement
+************************************************************************
+
+Version 3 :
+
+- Passer la commande pour l’utilisateur et phase de paiement
+
