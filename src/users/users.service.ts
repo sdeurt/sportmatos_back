@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -11,8 +11,8 @@ export class UsersService {
     const newUser = new User();
 
     newUser.id = createUserDto.id;
-    newUser.firtName = createUserDto.firstName;
-    newUser.lastName = createUserDto.lastName;
+    newUser.firtname = createUserDto.firstName;
+    newUser.lastname = createUserDto.lastName;
     newUser.email = createUserDto.email;
     newUser.password = hash;
     newUser.admin = createUserDto.admin;
@@ -21,9 +21,16 @@ export class UsersService {
     return newUser;
   }
 
-  findAll() {
-    return `This action returns all users`;
-  }
+   /** Récupère tous les Users */
+   async findAll(): Promise<User[]> {
+    const users = await User.find({relations: {}});
+
+    if (users.length > 0) {
+      return users;
+    };
+
+    return undefined;
+  };
 
     /** Récupère un User par son email */
     async findOneByEmail(email: string): Promise<User> {
@@ -52,7 +59,23 @@ export class UsersService {
     return `This action updates a #${id} user`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
+  /** Supprime un User */
+  async remove(id: number): Promise<User | undefined> {
+
+    // Vérifie que le User à supprimer existe
+    const isUserExists = await User.findOneBy({ id });
+
+    if (!isUserExists) {
+      throw new NotFoundException('User id inexistant');
+    };
+
+    await isUserExists.remove();
+
+    if (isUserExists) {
+      return isUserExists;
+    };
+
+    return undefined;
+  };
+
 }
