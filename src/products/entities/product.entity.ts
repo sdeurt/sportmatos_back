@@ -1,8 +1,9 @@
 import { Category } from "src/categories/entities/category.entity";
-import { BaseEntity, Column, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { OrderItem } from "src/order-item/entities/order-item.entity";
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 
-
+@Entity('products')
 export class Product extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -25,10 +26,10 @@ export class Product extends BaseEntity {
     @Column()
     stock: number;
   
-  /*   @ManyToOne(() => Category, (category) => category.products)
+   /*  @ManyToOne(() => Category, (category) => category.products)
     category: Category;
   
     @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
     orderItems: OrderItem[];
-   */
+    */
 }

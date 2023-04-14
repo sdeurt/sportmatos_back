@@ -12,12 +12,12 @@ export class CreateUserDto {
     @ApiProperty()
     @IsString()
     @Length(1)
-    firstName: string;
+    firstname: string;
 
     @ApiProperty()
     @IsString()
     @Length(1)
-    lastName: string;
+    lastname: string;
 
     @ApiProperty()
     @IsEmail()

@@ -11,8 +11,8 @@ export class UsersService {
     const newUser = new User();
 
     newUser.id = createUserDto.id;
-    newUser.firtname = createUserDto.firstName;
-    newUser.lastname = createUserDto.lastName;
+    newUser.firstname = createUserDto.firstname;
+    newUser.lastname = createUserDto.lastname;
     newUser.email = createUserDto.email;
     newUser.password = hash;
     newUser.admin = createUserDto.admin;

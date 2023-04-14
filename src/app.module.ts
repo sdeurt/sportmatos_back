@@ -32,15 +32,15 @@ import { OrderItem } from './order-item/entities/order-item.entity';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [User, Product, Category, Cart, Order, OrderItem],
-      synchronize: false,
+      synchronize: true,
     }),
      MulterModule.register({
         dest: './upload',
     }),
     
-    ServeStaticModule.forRoot({
+     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'upload'),
-    }),
+    }), 
     
     UsersModule,
     

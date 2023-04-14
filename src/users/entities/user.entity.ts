@@ -12,7 +12,7 @@ export class User extends BaseEntity {
     id: number;
 
     @Column({ type: 'varchar' })
-    firtname: string;
+    firstname: string;
 
     @Column({ type: 'varchar' })
     lastname: string;

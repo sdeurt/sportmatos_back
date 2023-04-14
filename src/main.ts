@@ -11,7 +11,7 @@ import { HttpExceptionFilter } from './errors/AllExceptionsFilter';
 async function bootstrap() {
   const cors = require('cors');
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.useStaticAssets(join(__dirname, '..', 'upload')),
+  //app.useStaticAssets(join(__dirname, '..', 'upload')),
   app.use(cors());
 
   app.setGlobalPrefix('api/'); // ajoute un préfixe "api" à toutes les routes (http://localhost:3000/api)

@@ -8,7 +8,7 @@ import { IsEmail } from 'class-validator';
 
 
 
-@ApiTags('Users')
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
@@ -52,9 +52,12 @@ export class UsersController {
   };
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
-  }
+  async findAll(): Promise<any> {
+    const users = await this.usersService.findAll();
+
+    return users;
+
+  };
 
   @Get(':id')
   findOne(@Param('id') id: string) {
