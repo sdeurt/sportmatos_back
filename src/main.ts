@@ -2,11 +2,11 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
-//import helmet from 'helmet';
+import helmet from 'helmet';
 import { DiskStorageOptions, StorageEngine } from 'multer';
 import { join } from 'path';
 import { AppModule } from './app.module';
-//import { HttpExceptionFilter } from './errors/AllExceptionsFilter';
+import { HttpExceptionFilter } from './errors/AllExceptionsFilter';
 
 async function bootstrap() {
   const cors = require('cors');
