@@ -19,6 +19,7 @@ import { Category } from './categories/entities/category.entity';
 import { Order } from './order/entities/order.entity';
 import { Cart } from './cart/entities/cart.entity';
 import { OrderItem } from './order-item/entities/order-item.entity';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
@@ -33,6 +34,7 @@ import { OrderItem } from './order-item/entities/order-item.entity';
       database: process.env.DB_NAME,
       entities: [User, Product, Category, Cart, Order, OrderItem],
       synchronize: true,
+      logging: false,
     }),
      MulterModule.register({
         dest: './upload',
@@ -53,6 +55,8 @@ import { OrderItem } from './order-item/entities/order-item.entity';
     OrderModule,
     
     OrderItemModule,
+    
+    AuthModule,
      
   ],
   controllers: [AppController],

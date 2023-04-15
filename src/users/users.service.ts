@@ -15,7 +15,7 @@ export class UsersService {
     newUser.lastname = createUserDto.lastname;
     newUser.email = createUserDto.email;
     newUser.password = hash;
-    newUser.admin = createUserDto.admin;
+    
 
     await newUser.save();
     return newUser;

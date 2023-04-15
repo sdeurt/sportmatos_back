@@ -12,7 +12,7 @@ Différents Rôles :
     et consulter les infos des produits proposés :
 •	L’utilisateur connecté donc authentifié  peut réaliser un panier 
     constitué d'un ou plusieurs produits puis passer commande
-•	L’administrateur  peut changer les photos des produits, modifier les infos d’un produit
+•	L’administrateur  peut changer les photos , modifier les infos , gérer et mettre à jour les produits
 
 ******************************************************************************
 MVP
@@ -21,7 +21,7 @@ Version1 :
 •	Dans la barre de navigation avec nom du site... au clic sur :
 
     - home, pour la liste des produits sélectionnable
-    - disponible, pour la liste des produits disponibles
+    - catégorie, pour la liste des produits 
     - mon panier, pour l’ accès au contenu du panier en cours
     - login/out, renvoient vers un formulaire d’authentification
     =>JWT pour la phase d’authentification
@@ -32,10 +32,10 @@ Version1 :
 •	Afficher le pointer vers la catégorie ou produit 
     survolée avec la souris (pour clic).
 •	Les catégories non sélectionnés doivent apparaître en grisées.
-•	Afficher sous chaque produit des icônes signifiant s'ils sont sélectionnés, 
-    en promotion ou disponible.
+ 
+    
 •	lorsqu'on clic sur une photo d’un produit, afficher les informations détaillées
-     sur le produit correspondant : nom, description, prix, disponibilité.
+     sur le produit correspondant : nom, description, prix.
 
 L’utilisateur authentifié peut se créer un panier d’un ou plusieurs produits, 
 peut revenir sur la liste des produits pour ajouter dans le panier en cours. 
@@ -52,8 +52,7 @@ Version 2 :
 -afficher le récapitulatif de commande
 -si commande validée : mettre à jour le back et l’affichage au front
 - gestion des photos
-Version 3 :
-- Passer la commande pour l’utilisateur et phase de paiement
+
 ************************************************************************
 
 Version 3 :

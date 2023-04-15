@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, ConflictException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, ConflictException, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
-import bcrypt from "bcrypt";
+import bcrypt, { hash } from "bcrypt";
 import { IsEmail } from 'class-validator';
+import { User } from './entities/user.entity';
 
 
 
@@ -21,7 +22,7 @@ export class UsersController {
   * @returns Renvoie les data du nouveau User
   */
   @Post('register')
-  @UseInterceptors(ClassSerializerInterceptor) // permet d
+  //@UseInterceptors(ClassSerializerInterceptor) //  permet de ne pas renvoyer le password
   async create(@Body() createUserDto: CreateUserDto): Promise<any> {
     const saltOrRounds = 10;
 
@@ -48,9 +49,11 @@ export class UsersController {
       statusCode: 201,
       message: 'Utilisateur enregistré',
       data: user
-    };
-  };
 
+    };
+
+  };
+  // Récupération de tous les users
   @Get()
   async findAll(): Promise<any> {
     const users = await this.usersService.findAll();
@@ -60,9 +63,19 @@ export class UsersController {
   };
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOneById(+id);
-  }
+  async findOneById(@Param('id') id: number): Promise<any> {
+    const user = await this.usersService.findOneById(+id);
+
+    if (!user) {
+      throw new NotFoundException("User id inexistant");
+    };
+
+    return {
+      statusCode: 200,
+      message: 'Affichage du User sélectionné',
+      data: user
+    };
+  };
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
