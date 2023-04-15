@@ -13,10 +13,11 @@ export class OrderItem extends BaseEntity {
   @Column()
   price: number;
 
-/*   @ManyToOne(() => Order, (order) => order.orderItems)
+  @ManyToOne(() => Order, (order) => order.orderItems)
   order: Order;
 
-  @ManyToOne(() => Product, (product) => product.orderItems)
+  @ManyToOne(() => Product, (product) => product.orderItems,{ eager: true })
   product: Product;
-     */
+     
 }
+//eager: true, les relations order et product seront automatiquement chargées lorsque vous récupérez une entité OrderItem de la base de données

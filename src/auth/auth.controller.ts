@@ -10,21 +10,22 @@ import { User } from 'src/users/entities/user.entity';
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-  @Post('/register')
-  @UseGuards(AuthGuard()) //post accessible aux utilisateurs connectés
-  /**décorateur @GetUser()user:User dans un paramètre pour avoir accès à l'objet de 
+  /**décorateur @GetUser()user:User dans un paramètre pour avoir accès à l'objet de
   l'utilisateur qui a envoyé la requête*/
-  create(@Body() createAuthDto: CreateAuthDto,
-    @GetUser() user: User,) {
-    console.log(user);
+  @Post('/register')
+  create(@Body() createAuthDto: CreateAuthDto) { 
+    console.log(createAuthDto);
     return this.authService.register(createAuthDto);
   }
 
   @Post('/login')
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard())//post accessible aux utilisateurs connectés
   login(
     @Body() loginDto: LoginDto,
+   // @GetUser() user: User,
   ): Promise<{ accessToken: string }> {
+   // console.log(user);
+    
     return this.authService.login(loginDto);
   }
 

@@ -21,6 +21,8 @@ export class AuthService {
  
     // hashage du mot de passe
     const salt = await bcrypt.genSalt();
+    console.log(salt);
+    
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // création d'une entité user

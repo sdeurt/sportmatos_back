@@ -41,8 +41,10 @@ export class User extends BaseEntity {
 
     //relations
     @ApiProperty({ type: () => [Order] })
-    @OneToMany(() => Order, (order) => order.id, { cascade: true })
+    @OneToMany(() => Order, (order) => order.user, {cascade: true })
     @JoinTable()
     orders: Order[];
 
+/**cascade pour permettre les opérations de cascade, telles que la suppression des commandes (Order) associées lorsqu'un utilisateur (User) est supprimé.
+ *   cascade: true: les commandes associées seront automatiquement supprimées lorsque l'utilisateur est supprimé */
 }

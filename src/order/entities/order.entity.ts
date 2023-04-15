@@ -17,9 +17,9 @@ export class Order extends BaseEntity {
     @Column({ type: 'varchar' })
     status: string;
 
-    /*  @ManyToOne(() => User, (user) => user.orders)
+     @ManyToOne(() => User, (user) => user.orders, { eager: true })
      user: User;
    
-     @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
-     orderItems: OrderItem[]; */
+     @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { eager: true })
+     orderItems: OrderItem[]; 
 }

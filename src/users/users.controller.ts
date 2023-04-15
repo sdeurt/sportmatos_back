@@ -21,38 +21,38 @@ export class UsersController {
   * @param createUserDto Dto contenant les données de la requête (Insomnia par exemple)
   * @returns Renvoie les data du nouveau User
   */
-  @Post('register')
+  // @Post('register')
   //@UseInterceptors(ClassSerializerInterceptor) //  permet de ne pas renvoyer le password
-  async create(@Body() createUserDto: CreateUserDto): Promise<any> {
-    const saltOrRounds = 10;
+  // async create(@Body() createUserDto: CreateUserDto): Promise<any> {
+  //   const saltOrRounds = 10;
 
-    // Vérifie que le password fournit n'existe pas déjà 
-    const isUserExist = await this.usersService.findOneById(createUserDto.id);
-    if (isUserExist)
-      throw new ConflictException(
-        'le User existe déjà'
-      );
-    // Vérifie que l'email fournit n'existe pas déjà
-    const isEmailExist = await this.usersService.findOneByEmail(createUserDto.email);
-    if (isEmailExist)
-      throw new ConflictException(
-        'E-mail déjà utilisé, veuillez entrer un e-mail valide',
-      );
+  //   // Vérifie que le password fournit n'existe pas déjà 
+  //   const isUserExist = await this.usersService.findOneById(createUserDto.id);
+  //   if (isUserExist)
+  //     throw new ConflictException(
+  //       'le User existe déjà'
+  //     );
+  //   // Vérifie que l'email fournit n'existe pas déjà
+  //   const isEmailExist = await this.usersService.findOneByEmail(createUserDto.email);
+  //   if (isEmailExist)
+  //     throw new ConflictException(
+  //       'E-mail déjà utilisé, veuillez entrer un e-mail valide',
+  //     );
 
-    // Hashage du password
-    const hash = await bcrypt.hash(createUserDto.password, saltOrRounds);
+  //   // Hashage du password
+  //   const hash = await bcrypt.hash(createUserDto.password, saltOrRounds);
 
-    // Création du user
-    const user = await this.usersService.create(createUserDto, hash);
+  //   // Création du user
+  //   const user = await this.usersService.create(createUserDto, hash);
 
-    return {
-      statusCode: 201,
-      message: 'Utilisateur enregistré',
-      data: user
+  //   return {
+  //     statusCode: 201,
+  //     message: 'Utilisateur enregistré',
+  //     data: user
 
-    };
+  //   };
 
-  };
+  // };
   // Récupération de tous les users
   @Get()
   async findAll(): Promise<any> {

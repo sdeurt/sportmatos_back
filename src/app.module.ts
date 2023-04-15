@@ -31,7 +31,7 @@ import { AuthModule } from './auth/auth.module';
       port: parseInt(process.env.DB_PORT),
       username: process.env.DB_USERNAME, 
       password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
+      database: process.env.DB_DATABASE,
       entities: [User, Product, Category, Cart, Order, OrderItem],
       synchronize: true,
       logging: false,
@@ -53,7 +53,7 @@ import { AuthModule } from './auth/auth.module';
     CartModule,
     
     OrderModule,
-    
+     
     OrderItemModule,
     
     AuthModule,
