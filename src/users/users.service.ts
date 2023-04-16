@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 
+
 @Injectable()
 export class UsersService {
 
@@ -55,7 +56,27 @@ export class UsersService {
 
   };
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+ 
+  /** Supprime la commande d'un User */
+  async removeFromCart(user: User, productId: number): Promise<User> {
+
+    // Crée une nouvelle commande sans le produit à supprimer
+    const newProductList = user.orders.map(product => {
+      if (product.id !== productId) {
+        return newProductList;
+      };
+    });
+
+    // Remplace le tableau de commande par le nouveau tableau 
+    user.orders = newProductList;
+
+    user.save();
+
+    return user;
+  };
+
+  update
+  (id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
 

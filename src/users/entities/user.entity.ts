@@ -30,6 +30,10 @@ export class User extends BaseEntity {
     @Column({ nullable: false })
     password: string;
 
+    @ApiProperty()
+    @Column({ type: 'boolean', default: false })
+    admin: boolean;
+
     //relations
     @ApiProperty({ type: () => [Order] })
     @OneToMany(() => Order, (order) => order.user, {cascade: true })
