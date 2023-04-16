@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Query, HttpException, HttpStatus } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -12,17 +12,41 @@ export class ProductsController {
 
   @Post()
   async create(@Body() createProductDto: CreateProductDto) {
-    return await this.productsService.addProduct(createProductDto);
+
+    const response = await this.productsService.addProduct(createProductDto);
+
+    return {
+      status: 201,
+      message: "produit ajouté",
+      data: response
+    }
   }
 
   @Get()
   async findAll() {
-    return await this.productsService.findAllProducts();
+    const allProducts = await this.productsService.findAllProducts();
+    if (!allProducts) {
+      throw new HttpException("aucun produit trouvé", HttpStatus.NOT_FOUND)
+    }
+    return {
+      status: 200,
+      message: " liste des produits",
+      data: allProducts
+    }
   }
 
   @Get(':id')
   async findOneById(@Param('id') id: string) {
-    return await this.productsService.findOneById(+id);
+    const product = await this.productsService.findOneById(+id);
+    if (!product) {
+      throw new HttpException("ce produit n'est pas en stock", HttpStatus.NOT_FOUND);
+    }
+    return {
+      statusCode: 200,
+      message: "produit demandé",
+      data: product,
+      
+    };
   }
 
   @Get('name/:name')
@@ -32,14 +56,25 @@ export class ProductsController {
     if (!isProductExist) {
       throw new NotFoundException(`le produit n'existe pas`);
     }
-    return await this.productsService.findOneByName(name);
+    return {
+      statusCode: 200,
+      message: "produit demandé",
+      data: isProductExist
+    }
   }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+    
     const product = await this.productsService.update(+id, updateProductDto);
+    
     if (!product) throw new NotFoundException(`Le produit n'existe pas!`);
-    return product;
+    
+    return {
+      statusCode: 200,
+      message: "Le produit a bien été modifié",
+      data: product
+    }
   }
 
   @Delete(':id')

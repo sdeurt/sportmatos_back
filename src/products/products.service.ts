@@ -35,7 +35,7 @@ export class ProductsService {
 
   /** Récupère un User par son id*/
   async findOneById(id: number): Promise<Product> {
-    const product = await Product.findOneBy({ id });
+    const product = await Product.findOneBy( {id} );
 
     if (product) {
       return product;
@@ -65,9 +65,11 @@ export class ProductsService {
     productUpdate.description = updateProductDto.description;
     
     const product = await productUpdate.save();
-    
+ 
+    if (updateProductDto) {
       return product;
-    
+    }
+    return undefined;
   }
 
   /** suppression d'un produit */
