@@ -1,32 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Post, UseGuards, Request } from '@nestjs/common';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginDto } from './dto/login.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from './get-user.decorator';
-import { User } from 'src/users/entities/user.entity';
+import { LocalAuthGuard } from './local-auth.guard';
 
+
+/**décorateur Tag permettant de catégoriser les différentes route dans la doc API Swagger*/
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-  /**décorateur @GetUser()user:User dans un paramètre pour avoir accès à l'objet de
-  l'utilisateur qui a envoyé la requête*/
-  @Post('/register')
-  create(@Body() createAuthDto: CreateAuthDto) { 
-    console.log(createAuthDto);
-    return this.authService.register(createAuthDto);
+
+  @UseGuards(LocalAuthGuard)
+  @Post('login')
+  @ApiBody({ type: LoginDto })
+  async login(@Request() req) {
+
+    return this.authService.login(req.user);
+
+  };
   }
 
-  @Post('/login')
-  @UseGuards(AuthGuard())//post accessible aux utilisateurs connectés
-  login(
-    @Body() loginDto: LoginDto,
-   // @GetUser() user: User,
-  ): Promise<{ accessToken: string }> {
-   // console.log(user);
-    
-    return this.authService.login(loginDto);
-  }
 
-}

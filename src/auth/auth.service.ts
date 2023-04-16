@@ -1,66 +1,47 @@
-import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import * as bcrypt from 'bcrypt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthService {
 
   constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
+    private usersService: UsersService,
     private jwtService: JwtService,
   ) { }
 
-  async register(createAuthDto: CreateAuthDto) {
-    const { firstname, lastname, email, password } = createAuthDto;
- 
-    // hashage du mot de passe
-    const salt = await bcrypt.genSalt();
-    console.log(salt);
-    
-    const hashedPassword = await bcrypt.hash(password, salt);
+  async validateUser(email: string, password: string): Promise<any> {
 
-    // création d'une entité user
-    const user = this.userRepository.create({
-      firstname,
-      lastname,
-      email,
-      password: hashedPassword,
-    });
+    const user = await this.usersService.findOneByEmail(email);
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (isMatch) {
+      const { password, ...result } = user;
+
+      return result;
+
+    };
+
+    throw new ForbiddenException('mot de passe incorrect');
+  };
     
-    try {
-      // enregistrement de l'entité user
-      const createdUser = await this.userRepository.save(user);
-      delete createdUser.password;
-      return createdUser;
-    } catch (error) {
-      // gestion des erreurs
-      if (error.code === '23505') {
-        throw new ConflictException('utilisateur existe déjà');
-      } else {
-        throw new InternalServerErrorException();
-      }
-    }
-  }
+    
 
   async login(loginDto: LoginDto) {
     
-    const { email, password } = loginDto;
-    const user = await this.userRepository.findOneBy({ email });
-
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const payload = { email };
-      const accessToken = await this.jwtService.sign(payload);
-      return { accessToken };
-    } else {
-      throw new UnauthorizedException(
-        'identifiants non valides',
-      );
-    }
+      const payload = { loginDto  };
+  
+      return {
+        statusCode: 200,
+        message: 'Connection réussie',
+        data: { 
+          loginDto: payload.loginDto,
+          access_token: this.jwtService.sign(payload) },
+      };
   }
 }

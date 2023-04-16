@@ -7,7 +7,7 @@ import { User } from './entities/user.entity';
 export class UsersService {
 
   /*crée un nouveau User */
-  async create(createUserDto: CreateUserDto, hash:string): Promise<User> {
+  async create(createUserDto: CreateUserDto, hash: string): Promise<User> {
     const newUser = new User();
 
     newUser.id = createUserDto.id;
@@ -15,15 +15,15 @@ export class UsersService {
     newUser.lastname = createUserDto.lastname;
     newUser.email = createUserDto.email;
     newUser.password = hash;
-    
+
 
     await newUser.save();
     return newUser;
   }
 
-   /** Récupère tous les Users */
-   async findAll(): Promise<User[]> {
-    const users = await User.find({relations: {orders:true}});
+  /** Récupère tous les Users */
+  async findAll(): Promise<User[]> {
+    const users = await User.find({ relations: { orders: true } });
 
     if (users.length > 0) {
       return users;
@@ -32,20 +32,20 @@ export class UsersService {
     return undefined;
   };
 
-    /** Récupère un User par son email */
-    async findOneByEmail(email: string): Promise<User> {
-      const user = await User.findOne({ where: { email: email } });
-  
-      if (user) {
-        return user;
-      };
-  
-      return undefined;
+  /** Récupère un User par son email */
+  async findOneByEmail(email: string): Promise<User> {
+    const user = await User.findOne({ where: { email: email } });
+
+    if (user) {
+      return user;
+    };
+
+    return undefined;
   };
-  
+
   /** Récupère un User par son Id */
   async findOneById(id: number): Promise<User> {
-    const user = await User.find({ relations: { }, where: { id: id } });
+    const user = await User.find({ relations: {}, where: { id: id } });
 
     if (user) {
       return user[0];
