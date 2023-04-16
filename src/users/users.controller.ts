@@ -26,7 +26,7 @@ export class UsersController {
   // async create(@Body() createUserDto: CreateUserDto): Promise<any> {
   //   const saltOrRounds = 10;
 
-  //   // Vérifie que le password fournit n'existe pas déjà 
+  //   // Vérifie que l'user n'existe pas déjà 
   //   const isUserExist = await this.usersService.findOneById(createUserDto.id);
   //   if (isUserExist)
   //     throw new ConflictException(
@@ -61,7 +61,18 @@ export class UsersController {
     return users;
 
   };
-
+  
+  @Get(':email')
+  async findOneByEmail(@Param('email') email: string): Promise<any>{
+    // Vérifie que l'email fournit n'existe pas déjà
+    const isEmailExist = await this.usersService.findOneByEmail(email);
+    if (isEmailExist)
+      throw new ConflictException(
+  //       'E-mail déjà utilisé, veuillez entrer un e-mail valide',
+      );
+      
+    }
+    
   @Get(':id')
   async findOneById(@Param('id') id: number): Promise<any> {
     const user = await this.usersService.findOneById(+id);

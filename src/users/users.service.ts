@@ -23,7 +23,7 @@ export class UsersService {
 
    /** Récupère tous les Users */
    async findAll(): Promise<User[]> {
-    const users = await User.find({relations: {}});
+    const users = await User.find({relations: {orders:true}});
 
     if (users.length > 0) {
       return users;
