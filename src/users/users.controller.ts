@@ -26,33 +26,43 @@ export class UsersController {
   // async create(@Body() createUserDto: CreateUserDto): Promise<any> {
   //   const saltOrRounds = 10;
 
-  //   // Vérifie que l'user n'existe pas déjà 
-  //   const isUserExist = await this.usersService.findOneById(createUserDto.id);
-  //   if (isUserExist)
-  //     throw new ConflictException(
-  //       'le User existe déjà'
-  //     );
-  //   // Vérifie que l'email fournit n'existe pas déjà
-  //   const isEmailExist = await this.usersService.findOneByEmail(createUserDto.email);
-  //   if (isEmailExist)
-  //     throw new ConflictException(
-  //       'E-mail déjà utilisé, veuillez entrer un e-mail valide',
-  //     );
+  // Vérifie que l'user n'existe pas déjà
+  /*  const isUserExist = await this.usersService.findOneById(createUserDto.id);
+    if (isUserExist)
+      throw new ConflictException(
+       'le User existe déjà'
+      ); */
+  /*      // Vérifie que l'email fournit n'existe pas déjà
+      const isEmailExist = await this.usersService.findOneByEmail(createUserDto.email);
+       if (isEmailExist)
+        throw new ConflictException(
+          'E-mail déjà utilisé, veuillez entrer un e-mail valide',
+         ); */
 
   //   // Hashage du password
   //   const hash = await bcrypt.hash(createUserDto.password, saltOrRounds);
 
-  //   // Création du user
-  //   const user = await this.usersService.create(createUserDto, hash);
+  // Création du user
+  /*     const user = await this.usersService.create(createUserDto);
+ 
+      return {
+       statusCode: 201,
+       message: 'Utilisateur enregistré',
+       data: user
+ 
+      };
+ 
+    }; */
+  @Post()
+  async create(@Body() createUserDto: CreateUserDto): Promise<any> {
+    await this.usersService.create(createUserDto)
+    return {
+      status: 201,
+      message: 'user créé',
+      data: createUserDto
+    }
+  };
 
-  //   return {
-  //     statusCode: 201,
-  //     message: 'Utilisateur enregistré',
-  //     data: user
-
-  //   };
-
-  // };
   // Récupération de tous les users
   @Get()
   async findAll(): Promise<any> {
@@ -61,18 +71,18 @@ export class UsersController {
     return users;
 
   };
-  
+
   @Get(':email')
-  async findOneByEmail(@Param('email') email: string): Promise<any>{
+  async findOneByEmail(@Param('email') email: string): Promise<any> {
     // Vérifie que l'email fournit n'existe pas déjà
     const isEmailExist = await this.usersService.findOneByEmail(email);
     if (isEmailExist)
       throw new ConflictException(
-  //       'E-mail déjà utilisé, veuillez entrer un e-mail valide',
+        //       'E-mail déjà utilisé, veuillez entrer un e-mail valide',
       );
-      
-    }
-    
+
+  }
+
   @Get(':id')
   async findOneById(@Param('id') id: number): Promise<any> {
     const user = await this.usersService.findOneById(+id);
@@ -89,12 +99,24 @@ export class UsersController {
   };
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+
+    const updateUser = await this.usersService.update(+id, updateUserDto);
+    return {
+      status: 200,
+      message: ' user modifié',
+      data: updateUser
+    }
+
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  async remove(@Param('id') id: string) {
+    const deleteUser = await this.usersService.remove(+id);
+    return {
+      status: 200,
+      message: 'affichage user supprimé',
+      data: deleteUser
+    }
   }
 }

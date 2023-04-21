@@ -5,7 +5,7 @@ import { Product } from './entities/product.entity';
 
 @Injectable()
 export class ProductsService {
-  
+
 
   /**crée un nouveau produit */
   async addProduct(createProductDto: CreateProductDto): Promise<Product> {
@@ -35,7 +35,7 @@ export class ProductsService {
 
   /** Récupère un User par son id*/
   async findOneById(id: number): Promise<Product> {
-    const product = await Product.findOneBy( {id} );
+    const product = await Product.findOneBy({ id });
 
     if (product) {
       return product;
@@ -63,9 +63,9 @@ export class ProductsService {
     productUpdate.image = updateProductDto.image;
     productUpdate.stock = updateProductDto.stock;
     productUpdate.description = updateProductDto.description;
-    
+
     const product = await productUpdate.save();
- 
+
     if (updateProductDto) {
       return product;
     }

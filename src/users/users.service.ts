@@ -7,20 +7,21 @@ import { User } from './entities/user.entity';
 @Injectable()
 export class UsersService {
 
-  /*crée un nouveau User */
-  async create(createUserDto: CreateUserDto, hash: string): Promise<User> {
+  /*crée un nouveau User hash: string*/
+  async create(createUserDto: CreateUserDto,): Promise<User> {
     const newUser = new User();
 
     newUser.id = createUserDto.id;
     newUser.firstname = createUserDto.firstname;
     newUser.lastname = createUserDto.lastname;
     newUser.email = createUserDto.email;
-    newUser.password = hash;
+    //newUser.password = hash;
 
 
     await newUser.save();
     return newUser;
   }
+
 
   /** Récupère tous les Users */
   async findAll(): Promise<User[]> {
@@ -56,7 +57,7 @@ export class UsersService {
 
   };
 
- 
+
   /** Supprime la commande d'un User */
   async removeFromCart(user: User, productId: number): Promise<User> {
 
@@ -75,9 +76,22 @@ export class UsersService {
     return user;
   };
 
-  update
-  (id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+
+  async update(id: number, updateUserDto: UpdateUserDto) {
+
+    const userUpdate = await User.findOneBy({ id });
+    userUpdate.firstname = updateUserDto.firstname;
+    userUpdate.lastname = updateUserDto.lastname;
+    userUpdate.email = updateUserDto.email;
+    userUpdate.password = updateUserDto.password;
+
+    const user = await userUpdate.save();
+
+    if (updateUserDto) {
+      return user;
+    }
+    return undefined;
+
   }
 
   /** Supprime un User */

@@ -11,9 +11,9 @@ export class Cart extends BaseEntity {
     @Column()
     quantity: number;
 
-       @ManyToOne(() => User, (user) => user.orders, { eager: true })
-       user: User;
-     
-       @ManyToOne(() => Product, (product) => product.orderItems, { eager: true })
-       product: Product; 
+    @ManyToOne(() => User, (user) => user.orders, { eager: true })
+    user: User;
+
+    @ManyToOne(() => Product, (product) => product.orderItems, { eager: true })
+    product: Product;
 }
