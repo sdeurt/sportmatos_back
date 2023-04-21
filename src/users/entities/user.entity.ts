@@ -20,6 +20,10 @@ export class User extends BaseEntity {
     @ApiProperty()
     @Column({ type: 'varchar' })
     lastname: string;
+    
+    @ApiProperty()
+    @Column({type: 'varchar'})
+    address: string;
 
     @ApiProperty()
     @Column({ unique: true })
