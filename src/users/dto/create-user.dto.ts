@@ -21,10 +21,6 @@ export class CreateUserDto {
 
     @ApiProperty()
     @IsString()
-    address: string;
-
-    @ApiProperty()
-    @IsString()
     email: string;
 
     @ApiProperty()
