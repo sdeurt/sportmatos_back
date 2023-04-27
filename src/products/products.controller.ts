@@ -26,7 +26,7 @@ export class ProductsController {
   async findAll() {
     const allProducts = await this.productsService.findAllProducts();
     if (!allProducts) {
-      throw new HttpException("aucun produit trouvé", HttpStatus.NOT_FOUND)
+      throw new HttpException("aucun produit trouvé", HttpStatus.NOT_FOUND);
     }
     return {
       status: 200,
@@ -44,7 +44,7 @@ export class ProductsController {
     return {
       statusCode: 200,
       message: "produit demandé",
-      data: product,
+      data: product
       
     };
   }
@@ -68,8 +68,10 @@ export class ProductsController {
     
     const product = await this.productsService.update(+id, updateProductDto);
     
-    if (!product) throw new NotFoundException(`Le produit n'existe pas!`);
+    if (!product) { 
+    throw new NotFoundException(`Le produit n'existe pas!`);
     
+  }
     return {
       statusCode: 200,
       message: "Le produit a bien été modifié",

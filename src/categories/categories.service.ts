@@ -9,7 +9,7 @@ import { ProductsService } from 'src/products/products.service';
 export class CategoriesService {
 
   //création d'une nouvelle
-  async create(createCategoryDto: CreateCategoryDto, product:Product): Promise<Category> {
+  async create(createCategoryDto: CreateCategoryDto, product: Product): Promise<Category> {
     const category = new Category();
 
     category.name = createCategoryDto.name;
@@ -21,43 +21,50 @@ export class CategoriesService {
   }
 
   //récupération de toutes les catégories
-  async findAll() {
-    return await Category.find();
+  async findAllCategories(): Promise<Category[]> {
+    const categories = await Category.find({ relations: {products: true}});
+    if (categories.length > 0) {
+      return categories;
+    }
   };
 
-  //récupération de toutes les catégories des produits
-  async findAllCategoriesByProductId(id: number) {
-    return await Category.find({ where: { products: { id: id } } });
+
+  // récupération de la catégorie par son id
+  async findById(id: number): Promise<Category> {
+    const category = await Category.findOneBy({ id });
+
+    if (category) {
+
+      return category;
+    }
+    return undefined;
   };
-
-
- // récupération de la catégorie par son id
- async findById(id: number) {
-  return await Category.findOneBy({ id });
-};
 
   
   // modification de la catégorie
   async update(category: Category, updateCategoryDto: UpdateCategoryDto) {
-  
+    const categoryUpdate = await Category.findOneBy({ name: category.name });
+   
     category.name = updateCategoryDto.name
 
-    await category.save();
+    const categorie = await categoryUpdate.save();
+    
+    if (updateCategoryDto) {
+      return categorie;
+    }
 
-    return await Category.findOneBy( {name:category.name});
+    return undefined;
   };
 
   // suppression catégorie par son id
-  async delete(id: number) {
-    const category = await Category.findOneBy({ id });
+  async delete(id: number): Promise<Category> {
+    const deleteCategory = await Category.findOneBy({ id });
+    await deleteCategory.remove();
 
 
-    if (category) {
-      await category.remove();
-      return category;
+    if (deleteCategory) {
+      return deleteCategory;
     };
 
-    throw new HttpException('catégorie non trouvée', HttpStatus.NOT_FOUND);
-  };
   }
-
+}

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, ConflictException, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, ConflictException, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -74,6 +74,8 @@ export class UsersController {
 
   @Get(':email')
   async findOneByEmail(@Param('email') email: string): Promise<any> {
+    console.log('here');
+    
     // Vérifie que l'email fournit n'existe pas déjà
     const isEmailExist = await this.usersService.findOneByEmail(email);
     if (isEmailExist)
@@ -83,17 +85,17 @@ export class UsersController {
 
   }
 
-  @Get(':id')
-  async findOneById(@Param('id') id: number): Promise<any> {
+  @Get('id/:id')
+  async findOneById(@Param('id') id: string) {
     const user = await this.usersService.findOneById(+id);
 
     if (!user) {
-      throw new NotFoundException("User id inexistant");
+      throw new HttpException("User id inexistant", HttpStatus.NOT_FOUND);
     };
 
     return {
       statusCode: 200,
-      message: 'Affichage du User sélectionné',
+      message: ' User sélectionné',
       data: user
     };
   };

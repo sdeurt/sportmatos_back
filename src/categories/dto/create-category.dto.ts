@@ -8,6 +8,7 @@ export class CreateCategoryDto {
     @Length(1)
     name: string;
 
+    @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
     productId: number

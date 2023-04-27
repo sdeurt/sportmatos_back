@@ -47,14 +47,13 @@ export class UsersService {
 
   /** Récupère un User par son Id */
   async findOneById(id: number): Promise<User> {
-    const user = await User.find({ relations: {}, where: { id: id } });
+    const user = await User.findOneBy({ id });
 
     if (user) {
-      return user[0];
+      return user;
     };
 
     return undefined;
-
   };
 
 

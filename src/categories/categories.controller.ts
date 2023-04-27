@@ -13,7 +13,7 @@ export class CategoriesController {
   constructor(
     private readonly categoriesService: CategoriesService,
     private readonly productsService: ProductsService,
-    private readonly usersService : UsersService
+    private readonly usersService: UsersService
 
   ) { }
 
@@ -48,69 +48,84 @@ export class CategoriesController {
     };
   };
 
+  /** Récupération de toutes les catégories */
   @Get()
   async findAll() {
-    return await this.categoriesService.findAll();
+    const allCategories = await this.categoriesService.findAllCategories();
+
+    if (!allCategories) {
+      throw new HttpException("aucune catégorie trouvée", HttpStatus.NOT_FOUND);
+    }
+    return {
+      status: 200,
+      message: " liste des catégories",
+      data: allCategories
+    }
   }
 
-  // liste de toutes catégories des produits
-  @Get('product/:id')
-  async findAllCategoriesProductId(@Param('id') id: string) {
-    return await this.categoriesService.findAllCategoriesByProductId(+id);
-  }
 
   //trouver la catégorie par son id
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.categoriesService.findById(+id)
+  async findOneBy(@Param('id') id: string) {
+    const categorie = await this.categoriesService.findById(+id);
+    if (!categorie) {
+      throw new HttpException("Cette catégorie n'existe pas", HttpStatus.NOT_FOUND);
     }
+    return {
+      statusCode: 200,
+      message: "catégorie demandée",
+      data: categorie
 
-   /** modification d'une catégorie  
-   * Nécessite :
-   * * d'être connecté/enregistré
-   * * d'être une admin
-   */
+    };
+  }
+
+
+  /** modification d'une catégorie  
+  * Nécessite :
+  * * d'être connecté/enregistré
+  * * d'être une admin
+  */
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-    
-  /*   // Vérifie que le User connecté est un admin
-    const userLoggedAdmin = (await this.categoriesService.findById(+id)).admin;
 
-    if (!userLoggedAdmin) {
-      throw new ForbiddenException("Vous devez être admin pour créer une catégorie");
-    };
-    
-    return await this.categoriesService.update({+id:id} , updateCategoryDto);
-  } */
-    
+    /*   // Vérifie que le User connecté est un admin
+      const userLoggedAdmin = (await this.categoriesService.findById(+id)).admin;
+  
+      if (!userLoggedAdmin) {
+        throw new ForbiddenException("Vous devez être admin pour créer une catégorie");
+      };
+      
+      return await this.categoriesService.update({+id:id} , updateCategoryDto);
+    } */
+
     //vérification que la catégorie existe
     const isCategoryExists = await this.categoriesService.findById(+id);
 
     if (!isCategoryExists) {
-      throw new NotFoundException("catégorie Id inconnu");
+      throw new NotFoundException("La catégorie n'existe pas");
     };
 
 
     // Modifie la catégorie sélectionnée
     const updatedCategory = await this.categoriesService.update(isCategoryExists, updateCategoryDto);
     if (updatedCategory)
-    return {
-      statusCode: 200,
-      message: 'catégorie modifiée',
-      data: updatedCategory,
-    };
+      return {
+        statusCode: 200,
+        message: 'catégorie modifiée',
+        data: updatedCategory,
+      };
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string, updateCategoryDto: UpdateCategoryDto) {
 
-  /*   // Vérifie que le User connecté est un admin
-    const userLoggedAdmin = (await this.usersService.findOneById(req.user.id)).admin;
-
-    if (!userLoggedAdmin) {
-      throw new ForbiddenException("Vous devez être admin pour supprimer une catégorie");
-    };
-     */
+    /*   // Vérifie que le User connecté est un admin
+      const userLoggedAdmin = (await this.usersService.findOneById(req.user.id)).admin;
+  
+      if (!userLoggedAdmin) {
+        throw new ForbiddenException("Vous devez être admin pour supprimer une catégorie");
+      };
+       */
     // suppression catégorie
     const category = await this.categoriesService.delete(+id);
 

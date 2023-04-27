@@ -19,7 +19,7 @@ export class ProductsService {
     newProduct.image = createProductDto.image;
     newProduct.stock = createProductDto.stock;
 
-    await newProduct.save()
+    await newProduct.save();
 
     return newProduct;
   }
