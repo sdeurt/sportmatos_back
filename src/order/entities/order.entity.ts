@@ -8,7 +8,12 @@ export class Order extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({
+        type: "decimal",
+        precision: 10,
+        scale: 2,
+        default: 0
+    })
     totalPrice: number;
 
     @Column({ type: 'varchar' })

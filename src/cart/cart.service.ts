@@ -1,26 +1,78 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
+import { Cart } from './entities/cart.entity';
+
 
 @Injectable()
 export class CartService {
-  create(createCartDto: CreateCartDto) {
-    return 'This action adds a new cart';
+
+  /** Récupération de tous les paniers */
+  
+ async addCart(createCartDto: CreateCartDto): Promise <Cart> {
+   const newCart = new Cart();
+
+   newCart.quantity = createCartDto.quantity;
+   
+   await newCart.save();
+
+   return newCart;
   }
 
-  findAll() {
-    return `This action returns all cart`;
+  /** Récupération de tous les paniers  */
+  
+  async findAllCart(): Promise<Cart []> {
+    
+    const carts = await Cart.find();
+
+    if (carts.length > 0) {
+
+      return carts
+    }
+    return undefined ;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cart`;
+  /** Récupération d'un panier  */
+  
+  async findOneById (id: number) : Promise< Cart > {
+    
+    const cart = await Cart.findOneBy({id})
+   
+    if (cart) {
+
+      return cart;
+
+    }
+    return undefined ;
   }
 
-  update(id: number, updateCartDto: UpdateCartDto) {
-    return `This action updates a #${id} cart`;
+  /** Modification d'un  panier */
+  
+  async update(id: number, updateCartDto: UpdateCartDto): Promise < Cart >{
+    const carUpdate = await Cart.findOneBy({ id });
+
+    carUpdate.id = updateCartDto.id;
+    carUpdate.quantity = updateCartDto.quantity;
+
+    const cart = await carUpdate.save();
+
+    if (carUpdate) {
+
+      return cart;
+    };
+
+    return undefined;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cart`;
+
+  /** suppression d'un panier */
+
+  async remove(id: number) : Promise < Cart > {
+    const deleteCart = await Cart.findOneBy({ id });
+    await deleteCart.remove();
+
+    if (deleteCart) {
+      return deleteCart;
+    }
   }
 }

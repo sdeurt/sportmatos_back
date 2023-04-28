@@ -13,7 +13,12 @@ export class Product extends BaseEntity {
     @Column({ type: 'varchar' })
     description: string;
 
-    @Column()
+    @Column({
+        type: "decimal",
+        precision: 10,
+        scale: 2,
+        default: 0
+    })
     price: number;
 
     @Column()

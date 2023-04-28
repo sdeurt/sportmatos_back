@@ -10,6 +10,8 @@ import { ApiTags } from '@nestjs/swagger';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) { }
 
+  /** création d'un produit */
+
   @Post()
   async create(@Body() createProductDto: CreateProductDto) {
 
@@ -21,6 +23,9 @@ export class ProductsController {
       data: response
     }
   }
+
+
+  /** Affichage de tous les produits */
 
   @Get()
   async findAll() {
@@ -35,6 +40,9 @@ export class ProductsController {
     }
   }
 
+
+  /** Recherche produit par id  */
+
   @Get(':id')
   async findOneById(@Param('id') id: string) {
     const product = await this.productsService.findOneById(+id);
@@ -45,9 +53,12 @@ export class ProductsController {
       statusCode: 200,
       message: "produit demandé",
       data: product
-      
+
     };
   }
+
+
+  /** Recherche produit par nom */
 
   @Get('name/:name')
   async findOne(@Param('name') name: string) {
@@ -63,15 +74,17 @@ export class ProductsController {
     }
   }
 
+  /**Modification du produit par id */
+
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    
+
     const product = await this.productsService.update(+id, updateProductDto);
-    
-    if (!product) { 
-    throw new NotFoundException(`Le produit n'existe pas!`);
-    
-  }
+
+    if (!product) {
+      throw new NotFoundException(`Le produit n'existe pas!`);
+
+    }
     return {
       statusCode: 200,
       message: "Le produit a bien été modifié",

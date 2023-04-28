@@ -1,7 +1,7 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { Product } from "src/products/entities/product.entity";
 import { User } from "src/users/entities/user.entity";
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-
 
 @Entity('cart')
 export class Cart extends BaseEntity {

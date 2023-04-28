@@ -20,7 +20,7 @@ export class CategoriesController {
   /** Création d'une catégorie  
     * Nécessite :
     * * d'être connecté/enregistré
-    * * d'être une admin
+    * * d'être un admin
     */
   @Post()
   async create(@Body() createCategoryDto: CreateCategoryDto) {

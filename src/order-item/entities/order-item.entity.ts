@@ -10,7 +10,12 @@ export class OrderItem extends BaseEntity {
   @Column()
   quantity: number;
 
-  @Column()
+  @Column({
+    type: "decimal",
+    precision: 10,
+    scale: 2,
+    default: 0
+})
   price: number;
 
   @ManyToOne(() => Order, (order) => order.orderItems)

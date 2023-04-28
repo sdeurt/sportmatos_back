@@ -14,7 +14,7 @@ export class ProductsService {
     newProduct.id = createProductDto.id;
     newProduct.name = createProductDto.name;
     newProduct.description = createProductDto.description;
-    newProduct.price = createProductDto.price;
+    newProduct.price= createProductDto.price;
     newProduct.quantity = createProductDto.quantity;
     newProduct.image = createProductDto.image;
     newProduct.stock = createProductDto.stock;
