@@ -92,6 +92,9 @@ export class ProductsController {
     }
   }
 
+
+  /** Suppression du produit par id */
+  
   @Delete(':id')
   async remove(@Param('id') id: string) {
     /**vérifier que le produit à supprimer existe */
