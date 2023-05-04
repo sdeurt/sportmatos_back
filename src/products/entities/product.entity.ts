@@ -1,5 +1,5 @@
+import { CartItem } from "src/cart-item/entities/cart-item.entity";
 import { Category } from "src/categories/entities/category.entity";
-import { OrderItem } from "src/order-item/entities/order-item.entity";
 import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('products')
@@ -22,9 +22,6 @@ export class Product extends BaseEntity {
     price: number;
 
     @Column()
-    quantity: number;
-
-    @Column()
     image: string;
 
     @Column()
@@ -33,7 +30,7 @@ export class Product extends BaseEntity {
     @ManyToOne(() => Category, (category) => category.products,  { eager: true })
     category: Category;
 
-    @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
-    orderItems: OrderItem[];
+    @OneToMany(() => CartItem, (cartItem) => cartItem.product)
+    cartItems: CartItem[];
 
 }

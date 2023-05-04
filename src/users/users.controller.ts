@@ -55,11 +55,16 @@ export class UsersController {
     }; */
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<any> {
-    await this.usersService.create(createUserDto)
+
+    const isEmailExist = await this.usersService.findOneByEmail(createUserDto.email);
+    if (isEmailExist) {
+      throw new ConflictException(`Cet email existe déjà, veuillez en saisir un nouveau`);
+    }
+   const user = await this.usersService.create(createUserDto)
     return {
       status: 201,
       message: 'user créé',
-      data: createUserDto
+      data: user
     }
   };
 
@@ -78,10 +83,12 @@ export class UsersController {
     
     // Vérifie que l'email fournit n'existe pas déjà
     const isEmailExist = await this.usersService.findOneByEmail(email);
-    if (isEmailExist)
-      throw new ConflictException(
-        //       'E-mail déjà utilisé, veuillez entrer un e-mail valide',
+    if (!isEmailExist)
+      throw new NotFoundException(
+          `Cet email n'existe pas, veuillez entrer un e-mail valide`,
       );
+    
+    return isEmailExist;
 
   }
 

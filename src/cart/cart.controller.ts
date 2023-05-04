@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, NotFoundException, Bind, ParseIntPipe } from '@nestjs/common';
 import { CartService } from './cart.service';
-import { CreateCartDto } from './dto/create-cart.dto';
+import { AddProductToCartDto } from './dto/addProductToCartDto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -10,11 +10,14 @@ import { ApiTags } from '@nestjs/swagger';
 export class CartController {
   constructor(private readonly cartService: CartService) { }
 
-  /**Création / ajout au panier */
-  @Post()
-  async addCart(@Body() createCartDto: CreateCartDto) {
+  /**Création / ajout au panier et contrôler que le paramètre idProduct est bien un entier*/
+  @Post('add/product/:idProduct')
+  @Bind(Param('idProduct', ParseIntPipe))
+  async addProductToCart(@Param('idProduct') idProduct: string, @Body() addProductToCartDto: AddProductToCartDto) {
 
-    const response = await this.cartService.addCart(createCartDto);
+    /*  console.log(user); A rendre fonctionnel */
+
+    const response = await this.cartService.addCart(addProductToCartDto);
 
     return {
       status: 201,
@@ -75,22 +78,24 @@ export class CartController {
 
   /** Suppression du  panier par id */
 
+  /** Vérification que le panier à supprimer existe */
   @Delete(':id')
   async remove(@Param('id') id: string) {
-
-    /** Vérification que le panier à supprimer existe */
-    const isCartExists = await this.cartService.remove(+id);
-
-    if (!isCartExists) {
+    /**vérifier que le produit à supprimer existe */
+    const isCartExist = await this.cartService.findOneById(+id);
+    if (!isCartExist) {
       throw new NotFoundException(`le panier n'existe pas`);
     };
-    /**supprime le panier sélectionné */
     await this.cartService.remove(+id);
+    /**supprime le panier sélectionné */
 
-    return {
-      statusCode: 200,
-      message: ' produit supprimé',
-      data: isCartExists
-    }
-  }
+    if (isCartExist)
+      return {
+        statusCode: 200,
+        message: 'panier supprimée',
+        data: isCartExist,
+      };
+  };
+
 }
+

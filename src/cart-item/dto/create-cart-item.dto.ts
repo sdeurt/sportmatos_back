@@ -1,8 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNumber } from "class-validator";
 
-export class CreateCartDto {
 
+
+
+
+export class CreateCartItemDto {
     @ApiProperty()
     @IsNumber()
     id: number;
@@ -10,4 +13,12 @@ export class CreateCartDto {
     @ApiProperty()
     @IsNumber()
     quantity: number;
+
+    @ApiProperty()
+    @IsNumber()
+    cartId: number;
+
+    @ApiProperty()
+    @IsNumber()
+    producId: number;
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCartDto } from './dto/create-cart.dto';
+import { AddProductToCartDto } from './dto/addProductToCartDto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { Cart } from './entities/cart.entity';
 
@@ -7,56 +7,67 @@ import { Cart } from './entities/cart.entity';
 @Injectable()
 export class CartService {
 
-  /** Récupération de tous les paniers */
-  
- async addCart(createCartDto: CreateCartDto): Promise <Cart> {
-   const newCart = new Cart();
+  /** Panier en cours d'un user  */
+  async getCurrentCart(userId: number): Promise<Cart | null> {
+    return await Cart.findOneBy({
+      user: { id: userId },
+      status: "en cours"
+    })
+  }
 
-   newCart.quantity = createCartDto.quantity;
-   
-   await newCart.save();
+  /** Ajout d'un panier */
 
-   return newCart;
+  async addCart(createCartDto: AddProductToCartDto): Promise<Cart> {
+    const newCart = new Cart();
+    /*   newCart.totalPrice = createCartDto.totalPrice; */
+    /*   newCart.cartItems = createCartDto.cartItems; */
+
+    await newCart.save();
+
+    return newCart;
   }
 
   /** Récupération de tous les paniers  */
-  
-  async findAllCart(): Promise<Cart []> {
-    
+
+  async findAllCart(): Promise<Cart[]> {
+
     const carts = await Cart.find();
 
     if (carts.length > 0) {
 
       return carts
     }
-    return undefined ;
+    return undefined;
   }
 
-  /** Récupération d'un panier  */
-  
-  async findOneById (id: number) : Promise< Cart > {
-    
-    const cart = await Cart.findOneBy({id})
-   
+  /** Récupération d'un panier par id  */
+
+  async findOneById(id: number): Promise<Cart> {
+
+    const cart = await Cart.findOneBy({ id })
+
     if (cart) {
 
       return cart;
 
     }
-    return undefined ;
+    return undefined;
   }
 
   /** Modification d'un  panier */
-  
-  async update(id: number, updateCartDto: UpdateCartDto): Promise < Cart >{
-    const carUpdate = await Cart.findOneBy({ id });
 
-    carUpdate.id = updateCartDto.id;
-    carUpdate.quantity = updateCartDto.quantity;
+  async update(id: number, updateCartDto: UpdateCartDto): Promise<Cart> {
+    const cartUpdate = await Cart.findOneBy({ id });
 
-    const cart = await carUpdate.save();
+    /*   cartUpdate.userId = updateCartDto.userId;
+      cartUpdate.totalPrice = updateCartDto.totalPrice;
+      cartUpdate.cartItems = updateCartDto.cartItems; */
+    cartUpdate.date = updateCartDto.date;
 
-    if (carUpdate) {
+
+    const cart = await cartUpdate.save();
+
+    if (cartUpdate) {
 
       return cart;
     };
@@ -67,7 +78,7 @@ export class CartService {
 
   /** suppression d'un panier */
 
-  async remove(id: number) : Promise < Cart > {
+  async remove(id: number): Promise<Cart> {
     const deleteCart = await Cart.findOneBy({ id });
     await deleteCart.remove();
 

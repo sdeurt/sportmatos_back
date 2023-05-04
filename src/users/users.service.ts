@@ -11,21 +11,23 @@ export class UsersService {
   async create(createUserDto: CreateUserDto,): Promise<User> {
     const newUser = new User();
 
-    newUser.id = createUserDto.id;
     newUser.firstname = createUserDto.firstname;
     newUser.lastname = createUserDto.lastname;
     newUser.email = createUserDto.email;
+    newUser.password = createUserDto.password;
+    newUser.address = createUserDto.address;
     //newUser.password = hash;
 
 
     await newUser.save();
+    newUser.password = undefined;
     return newUser;
   }
 
 
   /** Récupère tous les Users */
   async findAll(): Promise<User[]> {
-    const users = await User.find({ relations: { orders: true } });
+    const users = await User.find({  relations: { carts: true  } });
 
     if (users.length > 0) {
       return users;
@@ -61,20 +63,20 @@ export class UsersService {
   async removeFromCart(user: User, productId: number): Promise<User> {
 
     // Crée une nouvelle commande sans le produit à supprimer
-    const newProductList = user.orders.map(product => {
+    const newProductList = user.carts.map(product => {
       if (product.id !== productId) {
         return newProductList;
       };
     });
 
     // Remplace le tableau de commande par le nouveau tableau 
-    user.orders = newProductList;
+    user.carts = newProductList;
 
     user.save();
 
     return user;
   };
-
+ 
 
   async update(id: number, updateUserDto: UpdateUserDto) {
 

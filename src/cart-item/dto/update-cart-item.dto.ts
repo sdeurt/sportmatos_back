@@ -1,20 +1,18 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { AddProductToCartDto } from './addProductToCartDto';
+import { CreateCartItemDto } from './create-cart-item.dto';
 import { IsNumber } from 'class-validator';
 
-export class UpdateCartDto extends PartialType(AddProductToCartDto) {
-
-   
+export class UpdateCartItemDto extends PartialType(CreateCartItemDto) {
     
     @ApiProperty()
     @IsNumber()
-    id: number;
+    quantity: number;
 
     @ApiProperty()
     @IsNumber()
-    totalPrice: number;
-    
+    cartId: number;
+
     @ApiProperty()
     @IsNumber()
-    date: Date;
+    producId: number;
 }

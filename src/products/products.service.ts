@@ -11,11 +11,9 @@ export class ProductsService {
   async addProduct(createProductDto: CreateProductDto): Promise<Product> {
     const newProduct = new Product();
 
-    newProduct.id = createProductDto.id;
     newProduct.name = createProductDto.name;
     newProduct.description = createProductDto.description;
     newProduct.price= createProductDto.price;
-    newProduct.quantity = createProductDto.quantity;
     newProduct.image = createProductDto.image;
     newProduct.stock = createProductDto.stock;
 
@@ -56,10 +54,8 @@ export class ProductsService {
   /**modification d'un produit */
   async update(id: number, updateProductDto: UpdateProductDto) {
     const productUpdate = await Product.findOneBy({ id })
-    productUpdate.id = updateProductDto.id;
     productUpdate.name = updateProductDto.name;
     productUpdate.price = updateProductDto.price;
-    productUpdate.quantity = updateProductDto.quantity;
     productUpdate.image = updateProductDto.image;
     productUpdate.stock = updateProductDto.stock;
     productUpdate.description = updateProductDto.description;

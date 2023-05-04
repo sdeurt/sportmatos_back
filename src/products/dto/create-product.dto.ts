@@ -4,9 +4,6 @@ import { IsNumber, IsString, Length } from "class-validator";
 
 export class CreateProductDto {
 
-    @ApiProperty()
-    @IsNumber()
-    id: number;
 
     @ApiProperty()
     @IsString()

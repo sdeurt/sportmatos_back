@@ -11,15 +11,13 @@ import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { CategoriesModule } from './categories/categories.module';
 import { CartModule } from './cart/cart.module';
-import { OrderModule } from './order/order.module';
-import { OrderItemModule } from './order-item/order-item.module';
 import { User } from './users/entities/user.entity';
 import { Product } from './products/entities/product.entity';
 import { Category } from './categories/entities/category.entity';
-import { Order } from './order/entities/order.entity';
 import { Cart } from './cart/entities/cart.entity';
-import { OrderItem } from './order-item/entities/order-item.entity';
 import { AuthModule } from './auth/auth.module';
+import { CartItemModule } from './cart-item/cart-item.module';
+import { CartItem } from './cart-item/entities/cart-item.entity';
 
 
 @Module({
@@ -32,7 +30,7 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.DB_USERNAME, 
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User, Product, Category, Cart, Order, OrderItem],
+      entities: [User, Product, Category, Cart, CartItem,],
       synchronize: true,
       logging: false,
     }),
@@ -52,11 +50,9 @@ import { AuthModule } from './auth/auth.module';
     
     CartModule,
     
-    OrderModule,
-     
-    OrderItemModule,
-    
     AuthModule,
+    
+    CartItemModule,
      
   ],
   controllers: [AppController],

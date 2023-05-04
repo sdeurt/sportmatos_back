@@ -1,19 +1,42 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { CartItem } from "src/cart-item/entities/cart-item.entity";
 import { Product } from "src/products/entities/product.entity";
 import { User } from "src/users/entities/user.entity";
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+
 
 @Entity('cart')
 export class Cart extends BaseEntity {
+    @ApiProperty()
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    quantity: number;
+    @ApiProperty()
+    @Column({
+        type: "decimal",
+        precision: 10,
+        scale: 2,
+        default: 0
+    })
+    totalPrice: number;
 
-    @ManyToOne(() => User, (user) => user.orders, { eager: true })
+    /** "en cours" "traité" "finalisé"  */
+    @ApiProperty()
+    @Column({default: "en cours"})
+    status: string; 
+
+        
+    @ApiProperty()
+    @CreateDateColumn({ type: "timestamptz" })
+    date: Date;
+
+    @ApiProperty()
+    @ManyToOne(() => User, (user) => user.carts, { eager: true })
     user: User;
 
-    @ManyToOne(() => Product, (product) => product.orderItems, { eager: true })
-    product: Product;
+    @ApiProperty()
+    @OneToMany(() => CartItem, (cartItems) => cartItems.cart, { eager: true })
+    cartItems: CartItem[];
+
+
 }
