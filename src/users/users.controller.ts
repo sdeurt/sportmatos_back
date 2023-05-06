@@ -22,6 +22,7 @@ export class UsersController {
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<any> {
+    
     const saltOrRounds = 10;
     const IsEmailExist = await this.usersService.findOneByEmail(createUserDto.email);
 
