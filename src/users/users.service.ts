@@ -2,32 +2,31 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { hash } from 'bcrypt';
 
 
 @Injectable()
 export class UsersService {
 
   /*crée un nouveau User hash: string*/
-  async create(createUserDto: CreateUserDto,): Promise<User> {
+  async create(createUserDto: CreateUserDto, hash: string): Promise<User> {
     const newUser = new User();
 
     newUser.firstname = createUserDto.firstname;
     newUser.lastname = createUserDto.lastname;
     newUser.email = createUserDto.email;
-    newUser.password = createUserDto.password;
+    newUser.password = hash;
+    newUser.admin = createUserDto.admin;
     newUser.address = createUserDto.address;
-    //newUser.password = hash;
-
 
     await newUser.save();
-    newUser.password = undefined;
     return newUser;
   }
 
 
   /** Récupère tous les Users */
   async findAll(): Promise<User[]> {
-    const users = await User.find({  relations: { carts: true  } });
+    const users = await User.find({ relations: { carts: true } });
 
     if (users.length > 0) {
       return users;
@@ -49,17 +48,17 @@ export class UsersService {
 
   /** Récupère un User par son Id */
   async findOneById(id: number): Promise<User> {
-    const user = await User.findOneBy({ id });
+    const user = await User.find({ relations: { carts: true }, where: { id: id } });
 
     if (user) {
-      return user;
+      return user[0];
     };
 
     return undefined;
   };
 
 
-  /** Supprime la commande d'un User */
+  /** Supprime le panier d'un User */
   async removeFromCart(user: User, productId: number): Promise<User> {
 
     // Crée une nouvelle commande sans le produit à supprimer
@@ -76,7 +75,7 @@ export class UsersService {
 
     return user;
   };
- 
+
 
   async update(id: number, updateUserDto: UpdateUserDto) {
 

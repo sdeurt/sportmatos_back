@@ -1,73 +1,46 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, ConflictException, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, ConflictException, NotFoundException, HttpException, HttpStatus, ParseIntPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
-import bcrypt, { hash } from "bcrypt";
-import { IsEmail } from 'class-validator';
 import { User } from './entities/user.entity';
-
+import * as bcrypt from 'bcrypt';
 
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
-
-
+  constructor(
+    private readonly usersService: UsersService) { }
+ 
   /* création d'un nouveau User
   **email unique
   **hash password
   * @param createUserDto Dto contenant les données de la requête (Insomnia par exemple)
   * @returns Renvoie les data du nouveau User
   */
-  // @Post('register')
-  //@UseInterceptors(ClassSerializerInterceptor) //  permet de ne pas renvoyer le password
-  // async create(@Body() createUserDto: CreateUserDto): Promise<any> {
-  //   const saltOrRounds = 10;
 
-  // Vérifie que l'user n'existe pas déjà
-  /*  const isUserExist = await this.usersService.findOneById(createUserDto.id);
-    if (isUserExist)
-      throw new ConflictException(
-       'le User existe déjà'
-      ); */
-  /*      // Vérifie que l'email fournit n'existe pas déjà
-      const isEmailExist = await this.usersService.findOneByEmail(createUserDto.email);
-       if (isEmailExist)
-        throw new ConflictException(
-          'E-mail déjà utilisé, veuillez entrer un e-mail valide',
-         ); */
-
-  //   // Hashage du password
-  //   const hash = await bcrypt.hash(createUserDto.password, saltOrRounds);
-
-  // Création du user
-  /*     const user = await this.usersService.create(createUserDto);
- 
-      return {
-       statusCode: 201,
-       message: 'Utilisateur enregistré',
-       data: user
- 
-      };
- 
-    }; */
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<any> {
+    const saltOrRounds = 10;
+    const IsEmailExist = await this.usersService.findOneByEmail(createUserDto.email);
 
-    const isEmailExist = await this.usersService.findOneByEmail(createUserDto.email);
-    if (isEmailExist) {
-      throw new ConflictException(`Cet email existe déjà, veuillez en saisir un nouveau`);
+    if (IsEmailExist) {
+      throw new HttpException("L'Email est déjà utilisé", HttpStatus.BAD_REQUEST);
     }
-   const user = await this.usersService.create(createUserDto)
+
+  
+    // Hashage du password
+    const hash = await bcrypt.hash(createUserDto.password, saltOrRounds);
+   
+      const user = await this.usersService.create(createUserDto, hash)
     return {
       status: 201,
       message: 'user créé',
       data: user
     }
   };
-
+  
   // Récupération de tous les users
   @Get()
   async findAll(): Promise<any> {
@@ -80,20 +53,20 @@ export class UsersController {
   @Get(':email')
   async findOneByEmail(@Param('email') email: string): Promise<any> {
     console.log('here');
-    
+
     // Vérifie que l'email fournit n'existe pas déjà
     const isEmailExist = await this.usersService.findOneByEmail(email);
     if (!isEmailExist)
       throw new NotFoundException(
-          `Cet email n'existe pas, veuillez entrer un e-mail valide`,
+        `Cet email n'existe pas, veuillez entrer un e-mail valide`,
       );
-    
+
     return isEmailExist;
 
   }
 
   @Get('id/:id')
-  async findOneById(@Param('id') id: string) {
+  async findOneById(@Param('id') id: number): Promise<any> {
     const user = await this.usersService.findOneById(+id);
 
     if (!user) {

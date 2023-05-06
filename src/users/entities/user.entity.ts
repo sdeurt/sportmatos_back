@@ -32,7 +32,9 @@ export class User extends BaseEntity {
  
 
   @ApiProperty()
-  @Exclude() // permet d'exclure une colonne du retour de données en ajoutant un interceptor sur les routes concernées
+  @Exclude()
+   /*  permet d'exclure une colonne du retour de données
+  en ajoutant un interceptor sur les routes concernées */
   @Column({ nullable: false })
   password: string;
 
@@ -46,6 +48,6 @@ export class User extends BaseEntity {
   @JoinTable()
   carts: Cart[];
 
-  /**cascade pour permettre les opérations de cascade, telles que la suppression des commandes (Order) associées lorsqu'un utilisateur (User) est supprimé.
+  /**cascade pour permettre les opérations de cascade, telles que la suppression des détails du panier (cart) associées lorsqu'un utilisateur (User) est supprimé.
    *   cascade: true: les commandes associées seront automatiquement supprimées lorsque l'utilisateur est supprimé */
 }

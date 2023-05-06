@@ -1,8 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, NotFoundException, Bind, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, NotFoundException, Bind, ParseIntPipe, ClassSerializerInterceptor, UseInterceptors, Req, ForbiddenException } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { AddProductToCartDto } from './dto/addProductToCartDto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
+import { User } from 'src/users/entities/user.entity';
+import { Cart } from './entities/cart.entity';
 
 
 @ApiTags('cart')
@@ -13,15 +16,21 @@ export class CartController {
   /**Création / ajout au panier et contrôler que le paramètre idProduct est bien un entier*/
   @Post('add/product/:idProduct')
   @Bind(Param('idProduct', ParseIntPipe))
-  async addProductToCart(@Param('idProduct') idProduct: string, @Body() addProductToCartDto: AddProductToCartDto) {
-
-    /*  console.log(user); A rendre fonctionnel */
-
+  @UseInterceptors(ClassSerializerInterceptor) // permet de ne pas renvoyer le password
+  
+  async addProductToCart(@Param('idProduct') idProduct: string, @Body() addProductToCartDto: AddProductToCartDto): Promise <any> {
+     // Vérifie que le User est connecté 
+    const userLogged = await this.cartService.findOneById(+idProduct);
+    
+     console.log(userLogged)
+    if (!userLogged) {
+      throw new ForbiddenException("Vous devez être authentifié pour ajouter le produit au panier");
+    };
     const response = await this.cartService.addCart(addProductToCartDto);
 
     return {
       status: 201,
-      message: "panier ajouté",
+      message: "produit ajouté au panier ",
       data: response
     }
   }

@@ -15,7 +15,6 @@ import { User } from './users/entities/user.entity';
 import { Product } from './products/entities/product.entity';
 import { Category } from './categories/entities/category.entity';
 import { Cart } from './cart/entities/cart.entity';
-import { AuthModule } from './auth/auth.module';
 import { CartItemModule } from './cart-item/cart-item.module';
 import { CartItem } from './cart-item/entities/cart-item.entity';
 
@@ -30,7 +29,7 @@ import { CartItem } from './cart-item/entities/cart-item.entity';
       username: process.env.DB_USERNAME, 
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User, Product, Category, Cart, CartItem,],
+      entities: [User, Product, Category, Cart, CartItem],
       synchronize: true,
       logging: false,
     }),
@@ -50,9 +49,8 @@ import { CartItem } from './cart-item/entities/cart-item.entity';
     
     CartModule,
     
-    AuthModule,
-    
     CartItemModule,
+
      
   ],
   controllers: [AppController],
