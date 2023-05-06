@@ -4,9 +4,6 @@ import { IsBoolean, IsOptional, IsString, Length } from "class-validator";
 
 export class CreateUserDto {
 
-
-
-
     @ApiProperty()
     @IsString()
     firstname: string;

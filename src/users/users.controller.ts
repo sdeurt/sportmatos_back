@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, ConflictException, NotFoundException, HttpException, HttpStatus, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, ConflictException, NotFoundException, HttpException, HttpStatus, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard';
 
 
 @ApiTags('users')
@@ -12,7 +13,7 @@ import * as bcrypt from 'bcrypt';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService) { }
- 
+
   /* création d'un nouveau User
   **email unique
   **hash password
@@ -22,7 +23,7 @@ export class UsersController {
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<any> {
-    
+
     const saltOrRounds = 10;
     const IsEmailExist = await this.usersService.findOneByEmail(createUserDto.email);
 
@@ -30,18 +31,18 @@ export class UsersController {
       throw new HttpException("L'Email est déjà utilisé", HttpStatus.BAD_REQUEST);
     }
 
-  
+
     // Hashage du password
     const hash = await bcrypt.hash(createUserDto.password, saltOrRounds);
-   
-      const user = await this.usersService.create(createUserDto, hash)
+
+    const user = await this.usersService.create(createUserDto, hash)
     return {
       status: 201,
       message: 'user créé',
       data: user
     }
   };
-  
+
   // Récupération de tous les users
   @Get()
   async findAll(): Promise<any> {
@@ -66,8 +67,10 @@ export class UsersController {
 
   }
 
-  @Get('id/:id')
-  async findOneById(@Param('id') id: number): Promise<any> {
+
+  @Get('id/:id')    // renvoie une erreur si le paramètre n'est pas un number
+  @UseInterceptors(ClassSerializerInterceptor) // permet de ne pas renvoyer le password
+  async findOneById(@Param('id', new ParseIntPipe()) id: number): Promise<any> {
     const user = await this.usersService.findOneById(+id);
 
     if (!user) {
@@ -81,18 +84,23 @@ export class UsersController {
     };
   };
 
+  @UseGuards(JwtAuthGuard) // Authentification du User
+  @UseInterceptors(ClassSerializerInterceptor) // permet de ne pas renvoyer le password
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-
+    
     const updateUser = await this.usersService.update(+id, updateUserDto);
+    
     return {
       status: 200,
       message: ' user modifié',
-      data: updateUser
+      data: updateUser,
     }
 
   }
 
+  @UseGuards(JwtAuthGuard) // Authentification du User
+  @UseInterceptors(ClassSerializerInterceptor) // permet de ne pas renvoyer le password
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const deleteUser = await this.usersService.remove(+id);

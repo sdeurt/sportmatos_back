@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, NotFoundException, Bind, ParseIntPipe, ClassSerializerInterceptor, UseInterceptors, Req, ForbiddenException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, NotFoundException, Bind, ParseIntPipe, ClassSerializerInterceptor, UseInterceptors, Req, ForbiddenException, UseGuards } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { AddProductToCartDto } from './dto/addProductToCartDto';
 import { UpdateCartDto } from './dto/update-cart.dto';
@@ -6,6 +6,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { User } from 'src/users/entities/user.entity';
 import { Cart } from './entities/cart.entity';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard';
 
 
 @ApiTags('cart')
@@ -14,24 +15,34 @@ export class CartController {
   constructor(private readonly cartService: CartService) { }
 
   /**Création / ajout au panier et contrôler que le paramètre idProduct est bien un entier*/
-  @Post('add/product/:idProduct')
+  @UseGuards(JwtAuthGuard)
+  @Post('add/product/:idProduct') //
   @Bind(Param('idProduct', ParseIntPipe))
   @UseInterceptors(ClassSerializerInterceptor) // permet de ne pas renvoyer le password
-  
-  async addProductToCart(@Param('idProduct') idProduct: string, @Body() addProductToCartDto: AddProductToCartDto): Promise <any> {
-     // Vérifie que le User est connecté 
-    const userLogged = await this.cartService.findOneById(+idProduct);
+
+  async addProductToCart(@Param('idProduct') idProduct: string, @Body() addProductToCartDto: AddProductToCartDto, @Req() req: any): Promise<any> {
+    // Vérifie que le User est connecté 
+    const user = req.user;
+
+    //Vérification existence produit(so)
+    //Vérification quantité disponible(so)
+    //Tentative de récupération du panier en cours du User
+    let currentCart = await this.cartService.getCurrentCart(user.id);
+
+    //Si tentative ratée création d'un nouveau panier
+    if (!currentCart) {
+      currentCart = await this.cartService.addCart(user);
+    }
     
-     console.log(userLogged)
-    if (!userLogged) {
-      throw new ForbiddenException("Vous devez être authentifié pour ajouter le produit au panier");
-    };
-    const response = await this.cartService.addCart(addProductToCartDto);
+    //Vérification de la présence ou non du produit parmi les cartitems de Cart
+    //si oui, ajouter au cartItem la quantity (si le stock est disponible)
+    // si non, création d'un nouveau  cartItem avec le produit et sa quantité
+    // Mise à jour total cart
 
     return {
       status: 201,
       message: "produit ajouté au panier ",
-      data: response
+      data: currentCart
     }
   }
 

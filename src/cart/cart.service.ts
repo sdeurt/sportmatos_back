@@ -1,7 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { AddProductToCartDto } from './dto/addProductToCartDto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { Cart } from './entities/cart.entity';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard';
+import { Product } from 'src/products/entities/product.entity';
+import { User } from 'src/users/entities/user.entity';
 
 
 @Injectable()
@@ -17,11 +20,11 @@ export class CartService {
 
   /** Ajout d'un panier */
 
-  async addCart(createCartDto: AddProductToCartDto): Promise<Cart> {
+  async addCart(user: User): Promise<Cart> {
     const newCart = new Cart();
-    /*   newCart.totalPrice = createCartDto.totalPrice; */
-    /*   newCart.cartItems = createCartDto.cartItems; */
-
+    newCart.user = user;
+    newCart.cartItems = [];
+    
     await newCart.save();
 
     return newCart;

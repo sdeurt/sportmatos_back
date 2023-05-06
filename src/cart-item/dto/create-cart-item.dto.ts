@@ -6,9 +6,7 @@ import { IsNumber } from "class-validator";
 
 
 export class CreateCartItemDto {
-    @ApiProperty()
-    @IsNumber()
-    id: number;
+   
 
     @ApiProperty()
     @IsNumber()

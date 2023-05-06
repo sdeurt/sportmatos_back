@@ -6,7 +6,7 @@ export class AddProductToCartDto {
 
     @ApiProperty()
     @IsNumber()
-    cartItems: number [];
+    quantity: number;
 
- 
+
 }

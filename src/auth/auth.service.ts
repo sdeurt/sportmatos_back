@@ -34,7 +34,7 @@ export class AuthService {
       statusCode: 200,
       message: 'Connection réussie',
       data: { 
-        username: payload.email,
+       user: user,
         access_token: this.jwtService.sign(payload) },
     };
 
