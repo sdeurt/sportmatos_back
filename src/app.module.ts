@@ -15,7 +15,6 @@ import { User } from './users/entities/user.entity';
 import { Product } from './products/entities/product.entity';
 import { Category } from './categories/entities/category.entity';
 import { Cart } from './cart/entities/cart.entity';
-import { CartItemModule } from './cart-item/cart-item.module';
 import { CartItem } from './cart-item/entities/cart-item.entity';
 import { AuthModule } from './auth/auth.module';
 
@@ -50,7 +49,6 @@ import { AuthModule } from './auth/auth.module';
     
     CartModule,
     
-    CartItemModule,
     
     AuthModule,
 

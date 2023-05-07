@@ -7,19 +7,17 @@ import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "t
 @Entity('cart-item')
 export class CartItem extends BaseEntity {
 
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    quantity: number;
+  @Column()
+  quantity: number;
 
 
-    @ManyToOne(() => Cart, (cart) => cart.cartItems)
-    cart: Cart;
+  @ManyToOne(() => Cart, (cart) => cart.cartItems)
+  cart: Cart;
 
-    @ManyToOne(() => Product, (product) => product.cartItems, { eager: true })
-    product: Product;
-    cartId: number;
-    productId: number;
-    users: any;
+  @ManyToOne(() => Product, (product) => product.cartItems, { eager: true })
+  product: Product;
+  
 }

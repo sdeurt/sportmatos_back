@@ -5,10 +5,14 @@ import { Cart } from './entities/cart.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard';
 import { Product } from 'src/products/entities/product.entity';
 import { User } from 'src/users/entities/user.entity';
+import { CartItem } from 'src/cart-item/entities/cart-item.entity';
+import { CreateCartItemDto } from 'src/cart-item/dto/create-cart-item.dto';
 
 
 @Injectable()
 export class CartService {
+
+
 
   /** Panier en cours d'un user  */
   async getCurrentCart(userId: number): Promise<Cart | null> {
@@ -24,13 +28,24 @@ export class CartService {
     const newCart = new Cart();
     newCart.user = user;
     newCart.cartItems = [];
-    
+
     await newCart.save();
 
     return newCart;
   }
-
-  /** Récupération de tous les paniers  */
+  
+ /**
+   * Méthode pour recalculer le total du panier lorsqu'un produit est ajouté,
+   * modifié ou supprimer*/
+  
+  async recalculateCart(user:User) {
+    const cart = await this.getCurrentCart(user.id);
+    const totalPrice = cart.cartItems.reduce((acc, item) => {
+      return acc + item.quantity * item.product.price;
+    }, 0);
+    cart.totalPrice = totalPrice;
+    return await cart.save();
+  }
 
   async findAllCart(): Promise<Cart[]> {
 
@@ -62,9 +77,7 @@ export class CartService {
   async update(id: number, updateCartDto: UpdateCartDto): Promise<Cart> {
     const cartUpdate = await Cart.findOneBy({ id });
 
-    /*   cartUpdate.userId = updateCartDto.userId;
-      cartUpdate.totalPrice = updateCartDto.totalPrice;
-      cartUpdate.cartItems = updateCartDto.cartItems; */
+    cartUpdate.totalPrice = updateCartDto.totalPrice;
     cartUpdate.date = updateCartDto.date;
 
 
@@ -81,12 +94,18 @@ export class CartService {
 
   /** suppression d'un panier */
 
-  async remove(id: number): Promise<Cart> {
-    const deleteCart = await Cart.findOneBy({ id });
+  async remove( id: number): Promise<Cart> {
+    const deleteCart = await Cart.findOneBy({id});
     await deleteCart.remove();
 
     if (deleteCart) {
       return deleteCart;
     }
+
+    
+      
+    }
+
+
   }
-}
+

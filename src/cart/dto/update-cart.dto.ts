@@ -17,4 +17,5 @@ export class UpdateCartDto extends PartialType(AddProductToCartDto) {
     @ApiProperty()
     @IsNumber()
     date: Date;
+ 
 }

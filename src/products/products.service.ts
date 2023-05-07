@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
+import { FilterProductDto } from './dto/filter.product.dto';
 
 @Injectable()
 export class ProductsService {
-
 
   /**crée un nouveau produit */
   async addProduct(createProductDto: CreateProductDto): Promise<Product> {
@@ -22,14 +22,13 @@ export class ProductsService {
     return newProduct;
   }
 
-
   /** récupère tous les produits */
   async findAllProducts(): Promise<Product[]> {
     const products = await Product.find();
     if (products.length > 0) {
       return products;
-    }
-  }
+    };
+  };
 
   /** Récupère un User par son id*/
   async findOneById(id: number): Promise<Product> {

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ForbiddenException, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ForbiddenException, HttpException, HttpStatus, Request } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -23,13 +23,13 @@ export class CategoriesController {
     * * d'être un admin
     */
   @Post()
-  async create(@Body() createCategoryDto: CreateCategoryDto) {
-    /*  // Vérifie que le User connecté est un admin
+  async create(@Body() createCategoryDto: CreateCategoryDto, @Request() req: any) {
+     // Vérifie que le User connecté est un admin
     const userLoggedAdmin = (await this.usersService.findOneById(req.user.id)).admin;
 
     if (!userLoggedAdmin) {
       throw new ForbiddenException("Vous devez être admin pour créer une catégorie");
-    };  */
+    };  
 
 
     // Vérifie que le produit existe
@@ -85,6 +85,7 @@ export class CategoriesController {
   * * d'être connecté/enregistré
   * * d'être une admin
   */
+ 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
 
@@ -117,15 +118,15 @@ export class CategoriesController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string, updateCategoryDto: UpdateCategoryDto) {
+  async remove(@Param('id') id: string, updateCategoryDto: UpdateCategoryDto, @Request() req:any) {
 
-    /*   // Vérifie que le User connecté est un admin
+     // Vérifie que le User connecté est un admin
       const userLoggedAdmin = (await this.usersService.findOneById(req.user.id)).admin;
   
       if (!userLoggedAdmin) {
         throw new ForbiddenException("Vous devez être admin pour supprimer une catégorie");
       };
-       */
+       
     // suppression catégorie
     const category = await this.categoriesService.delete(+id);
 
