@@ -48,6 +48,9 @@ export class User extends BaseEntity {
   @JoinTable()
   carts: Cart[];
 
-  /**cascade pour permettre les opérations de cascade, telles que la suppression des détails du panier (cart) associées lorsqu'un utilisateur (User) est supprimé.
-   *   cascade: true: les commandes associées seront automatiquement supprimées lorsque l'utilisateur est supprimé */
+  /**cascade pour permettre les opérations de cascade, 
+   * telles que la suppression des détails du panier (cart) 
+   * associées lorsqu'un utilisateur (User) est supprimé.
+   *   cascade: true: les commandes associées seront 
+   * automatiquement supprimées lorsque l'utilisateur est supprimé */
 }
